@@ -4,8 +4,8 @@ const { Pool } = require('pg');
 const pool = new Pool({
   user: 'postgres', //This _should_ be your username, as it's the default one Postgres uses
   host: 'localhost',
-  database: 'your_database_name', //This should be changed to reflect your actual database
-  password: 'your_database_password', //This should be changed to reflect the password you used when setting up Postgres
+  database: 'Rental-System', //This should be changed to reflect your actual database
+  password: 'tori', //This should be changed to reflect the password you used when setting up Postgres
   port: 5432,
 });
 
@@ -14,7 +14,43 @@ const pool = new Pool({
  */
 async function createTable() {
   // TODO: Add code to create Movies, Customers, and Rentals tables
-};
+  // Movies table
+  // don't want the same table twice
+  // - one director only and genre
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS movies ( 
+      movie_id SERIAL PRIMARY KEY,
+      title TEXT NOT NULL,
+      release_year INT NOT NULL,
+      genre TEXT,
+      director TEXT
+    );
+  `);
+  // customers table
+  // phone number should be TEXT not int
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS customers ( 
+      customer_id SERIAL PRIMARY KEY,
+      first_name TEXT NOT NULL,
+      last_name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      phone_number TEXT
+    );
+  `);
+
+  // rentals table
+  // movie was returned or should be 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS rentals ( 
+      rental_id SERIAL PRIMARY KEY,  
+      customer_id INT REFERENCES customers(customer_id) ON DELETE CASCADE,
+      movie_id INT REFERENCES movies(movie_id) ON DELETE CASCADE,
+      rental_date DATE NOT NULL,
+      return_date DATE
+    );
+  `);
+}
+
 
 /**
  * Inserts a new movie into the Movies table.
