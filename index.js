@@ -61,14 +61,31 @@ async function createTable() {
  * @param {string} director Director of the movie
  */
 async function insertMovie(title, year, genre, director) {
-  // TODO: Add code to insert a new movie into the Movies table
+  try {
+  await pool.query (`
+  INSERT INTO movies (title, release_year, genre, director)
+  VALUES ($1, $2, $3, $4)`, // numbers are placed holder for title and soon
+  [title, year, genre, director]);
+  console.log(`The Inserted movie ${title}`); // want to know if the movie was inserted 
+  } catch (error) {
+    // throw an error if it doesnt work
+    console.error("There was an error when inserting the movie", error)
+  }
 };
 
 /**
  * Prints all movies in the database to the console
  */
+// need to make sure that all movies are being display
 async function displayMovies() {
-  // TODO: Add code to retrieve and print all movies from the Movies table
+const allResult = await pool.query(`SELECT * FROM movies`);
+  console.log("Movies:");
+  allResult.rows.forEach((movie) => {
+    console.log(
+      `Movie ID: ${movie.movie_id}, Title: ${movie.title}, Release Year: ${movie.release_year}, Genre: ${movie.genre}, Director: ${movie.director}`
+    );
+  });
+
 };
 
 /**
