@@ -54,7 +54,6 @@ async function createTable() {
 
 /**
  * Inserts a new movie into the Movies table.
- * 
  * @param {string} title Title of the movie
  * @param {number} year Year the movie was released
  * @param {string} genre Genre of the movie
@@ -69,7 +68,7 @@ async function insertMovie(title, year, genre, director) {
   console.log(`The Inserted movie ${title}`); // want to know if the movie was inserted 
   } catch (error) {
     // throw an error if it doesnt work
-    console.error("There was an error when inserting the movie", error)
+    console.error('There was an error when inserting the movie', error)
   }
 };
 
@@ -78,25 +77,46 @@ async function insertMovie(title, year, genre, director) {
  */
 // need to make sure that all movies are being display
 async function displayMovies() {
+  try {
 const allResult = await pool.query(`SELECT * FROM movies`);
-  console.log("Movies:");
+  console.log('Movies:'); // double check 
   allResult.rows.forEach((movie) => {
     console.log(
       `Movie ID: ${movie.movie_id}, Title: ${movie.title}, Release Year: ${movie.release_year}, Genre: ${movie.genre}, Director: ${movie.director}`
-    );
+    ); // gives back all info
   });
+} catch (error) {
+  console.error('There was an error displaying all of the movies', error) // want a error if it doesnt work
+}
 
 };
 
 /**
  * Updates a customer's email address.
- * 
  * @param {number} customerId ID of the customer
  * @param {string} newEmail New email address of the customer
  */
 async function updateCustomerEmail(customerId, newEmail) {
-  // TODO: Add code to update a customer's email address
+  try {
+   const result = await pool.query(
+    `UPDATE customers 
+    SET email = $1 
+    WHERE customerID = $2`,
+    // 1 and 2 are placedholders 
+    [newEmail, customerId]
+   );
+
+   if (result.rowCount === 0) { // if 0 nothing was chnaged 
+      console.log(`The Customer ID "${customerId}" not found.`);
+    } else {
+      // email was changed 
+      console.log(`The Customer email updated to "${newEmail}".`);
+    }
+  } catch (error) {
+    console.error("There was an error updating the customer's email: ", error);
+  }
 };
+
 
 /**
  * Removes a customer from the database along with their rental history.
@@ -104,7 +124,25 @@ async function updateCustomerEmail(customerId, newEmail) {
  * @param {number} customerId ID of the customer to remove
  */
 async function removeCustomer(customerId) {
-  // TODO: Add code to remove a customer and their rental history
+   try {
+     const result = await pool.query(
+       `DELETE FROM customers 
+      WHERE id = $1`,
+       // 1 is a placedholders for id
+       [customerId]
+     );
+
+     if (result.rowCount === 0) {
+       // if 0 nothing was chnaged
+       console.log(`The Customer ID "${customerId}" not found.`);
+     } else {
+       // customer id would be removed
+       // when remove the rental history will be as well
+       console.log(`The Customer ID "${customerId}" has been removed as well as their rental history.`);
+     }
+   } catch (error) {
+     console.error("There was an error removing the customer ", error);
+   }
 };
 
 /**
