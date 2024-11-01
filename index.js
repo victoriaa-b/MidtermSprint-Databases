@@ -160,38 +160,40 @@ function printHelp() {
  * Runs our CLI app to manage the movie rentals database
  */
 async function runCLI() {
-  await createTable();
+   await createTable(); // Ensure that tables are created before processing commands
 
-  const args = process.argv.slice(2);
-  switch (args[0]) {
-    case 'insert':
-      if (args.length !== 5) {
-        printHelp();
-        return;
-      }
-      await insertMovie(args[1], parseInt(args[2]), args[3], args[4]);
-      break;
-    case 'show':
-      await displayMovies();
-      break;
-    case 'update':
-      if (args.length !== 3) {
-        printHelp();
-        return;
-      }
-      await updateCustomerEmail(parseInt(args[1]), args[2]);
-      break;
-    case 'remove':
-      if (args.length !== 2) {
-        printHelp();
-        return;
-      }
-      await removeCustomer(parseInt(args[1]));
-      break;
-    default:
-      printHelp();
-      break;
-  }
-};
+   const args = process.argv.slice(2);
+   switch (args[0]) {
+     case "insert":
+       if (args.length !== 5) {
+         printHelp();
+         return;
+       }
+       await insertMovie(args[1], parseInt(args[2]), args[3], args[4]);
+       break;
+     case "show":
+       await displayMovies();
+       break;
+     case "update":
+       if (args.length !== 3) {
+         printHelp();
+         return;
+       }
+       await updateCustomerEmail(parseInt(args[1]), args[2]);
+       break;
+     case "remove":
+       if (args.length !== 2) {
+         printHelp();
+         return;
+       }
+       await removeCustomer(parseInt(args[1]));
+       break;
+     default:
+       printHelp();
+       break;
+   }
 
-runCLI();
+   await pool.end();
+}
+
+ runCLI().catch((err) => console.error("Error running CLI:", err));
