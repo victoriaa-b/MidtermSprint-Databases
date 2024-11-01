@@ -26,3 +26,22 @@ CREATE TABLE IF NOT EXISTS rentals (
     rental_date DATE NOT NULL,
     return_date DATE
     );
+
+-- inserting data
+-- 5 movies
+INSERT INTO movies (title, release_year, genre, director)
+VALUES
+('The Last Song', '2010', 'Romance', 'Julie Anne Robinson'),
+('Hannah Montana: The Movie', '2009', 'Family', 'Peter Chelsom'),
+('So Undercover', '2012', 'Action', 'Tom Vaughan'),
+('LOL', '2012', 'Romance', ' Lisa Azuelos'),
+('If I Stay', '2014', 'Drama', 'R.J. Cutler');
+
+-- 5 customers 
+INSERT INTO customers (first_name, last_name, email, phone_number)
+VALUES
+('Deino', 'Dog','theDeinoDog@dogmail.com', '123-070-0222'),
+('Damian', 'Breen', 'damianBreen8@dogmail.com', '123-444-2121'),
+('Loki', 'Smith', 'lokiTheCat@dogmail.com', '123-222-2323'),
+('Chelsea', 'Mooney', 'chelseaMooney@dogmail.com', '123-689-1234'),
+('Sully', 'Shea', 'sullyMan@dogmail.com', '123-987-2202');
