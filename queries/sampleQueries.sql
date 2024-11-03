@@ -62,3 +62,38 @@ VALUES
 (4,1, '2024-01-02' , '2024-02-03'),
 (1,4, '2024-02-02' , NULL);
 
+-- find all movies by specific customer, given their email 
+SELECT CONCAT(customers.first_name, ' ', customers.last_name) AS full_name, movies.title
+FROM rentals
+JOIN customers ON rentals.customer_id = customers.customer_id
+JOIN movies ON rentals.movie_id = movies.movie_id
+WHERE email = 'theDeinoDog@dogmail.com';
+
+-- given a movie title, list all customers who have rented the movie
+SELECT CONCAT(customers.first_name, ' ', customers.last_name) AS full_name
+FROM rentals
+JOIN customers ON rentals.customer_id = customers.customer_id
+JOIN movies ON rentals.movie_id = movies.movie_id
+WHERE movies.title = 'LOL';
+
+-- get rental history for a specific movie title
+SELECT CONCAT(customers.first_name, ' ', customers.last_name) AS full_name, movies.title, rental_date, return_date
+FROM rentals
+JOIN movies ON rentals.movie_id = movies.movie_id
+JOIN customers ON rentals.customer_id = customers.customer_id
+WHERE movies.title = 'The Last Song';
+
+-- find specific movie director, find name of tee customer and the date
+-- of the rental and the title of the moive each time a movie by that director was rented
+SELECT movies.director, CONCAT(customers.first_name, ' ', customers.last_name) AS full_name, movies.title, rental_date
+FROM rentals
+JOIN movies ON rentals.movie_id = movies.movie_id
+JOIN customers ON rentals.customer_id = customers.customer_id
+WHERE movies.director = 'Peter Chelsom';
+
+-- list all currently rented out moviesv(return dates that havent been met)
+SELECT CONCAT(customers.first_name, ' ', customers.last_name) AS full_name, movies.title, rental_date, return_date
+FROM rentals
+JOIN movies ON rentals.movie_id = movies.movie_id
+JOIN customers ON rentals.customer_id = customers.customer_id
+WHERE return_date IS NULL OR return_date > current_date;
